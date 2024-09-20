@@ -26,10 +26,10 @@ public class Mesh_Sphere : MonoBehaviour
 
         meshObject.GetComponent<MeshFilter>().mesh = mesh;
 
-        mesh.vertices = vertices; // Assigner les sommets
-        mesh.uv = uv; // Assigner les coordonnées UV
-        mesh.triangles = triangles; // Assigner les triangles
-        mesh.RecalculateNormals(); // Recalculer les normales pour l'éclairage
+        mesh.vertices = vertices; // Assigne les sommets
+        mesh.uv = uv; // Assigne les coordonnées UV
+        mesh.triangles = triangles; // Assigne les triangles
+        
     }
 
     private void GenerateSphereData()
@@ -86,7 +86,7 @@ public class Mesh_Sphere : MonoBehaviour
         }
 
         // Générer les triangles pour le reste de la sphère (entre les parallèles)
-        for (int i = 0; i < nombre_Paralleles - 1; i++)
+        for (int i = 0; i < nombre_Paralleles -1 ; i++)
         {
             for (int j = 0; j < nombre_Meridiens; j++)
             {
@@ -95,19 +95,19 @@ public class Mesh_Sphere : MonoBehaviour
 
                 // Triangle 1
                 triangles[triIndex++] = current;
-                triangles[triIndex++] = next;
                 triangles[triIndex++] = current + 1;
+                triangles[triIndex++] = next;
 
                 // Triangle 2
                 triangles[triIndex++] = current + 1;
-                triangles[triIndex++] = next;
                 triangles[triIndex++] = next + 1;
+                triangles[triIndex++] = next;
             }
         }
 
         // Générer les triangles reliant le dernier parallèle au pôle sud
-        int baseIndex = (nombre_Paralleles - 1) * (nombre_Meridiens + 1) + 1;
-        for (int j = 0; j < nombre_Meridiens; j++)
+        int baseIndex = (nombre_Paralleles - 1) * (nombre_Meridiens + 1) ;
+        for (int j = 0; j < nombre_Meridiens ; j++)
         {
             triangles[triIndex++] = poleSud;
             triangles[triIndex++] = baseIndex + j;
