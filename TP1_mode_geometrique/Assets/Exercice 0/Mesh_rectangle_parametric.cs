@@ -6,7 +6,7 @@ using UnityEngine;
 public class Mesh_rectangle_parametric : MonoBehaviour
 {
     public int nombre_Lignes = 10; // def le nombre de ligne que contiendra le rectangle
-    public int nb_Colonnes = 10; // def le nombre de colonnes du rectangle
+    public int nombre_Colonnes = 10; // def le nombre de colonnes du rectangle
     // dans chaque case il y aura 2 triangles
 
     private Vector3[] vertices; // tableau de vecteurs qui contiendra les vertices
@@ -37,23 +37,23 @@ public class Mesh_rectangle_parametric : MonoBehaviour
 
     private void GenerateMeshData()
     {
-        int verticesCount = (nombre_Lignes + 1) * (nb_Colonnes + 1); // nombre de vertices dans le rectangle (nb de lignes + 1 * nb de colonnes + 1) car on a besoin d'un vertex en plus pour les triangles
+        int verticesCount = (nombre_Lignes + 1) * (nombre_Colonnes + 1); // nombre de vertices dans le rectangle (nb de lignes + 1 * nb de colonnes + 1) car on a besoin d'un vertex en plus pour les triangles
         vertices = new Vector3[verticesCount]; // tableau de vecteurs qui contiendra les vertices (permet de definir la taille du tableau)
         uv = new Vector2[verticesCount]; // tableau de vecteurs qui contiendra les coordonnées UV(permet de definir la taille du tableau)
-        triangles = new int[nombre_Lignes * nb_Colonnes * 6]; // tableau d'entiers qui contiendra les triangles nb de lignes * nb de colonnes * 6 (2 triangles par case)
+        triangles = new int[nombre_Lignes * nombre_Colonnes * 6]; // tableau d'entiers qui contiendra les triangles nb de lignes * nb de colonnes * 6 (2 triangles par case)
 
         // calcul des pas en fonction du nombre de lignes et de colonnes
-        float stepX = 1.0f / nb_Colonnes;
+        float stepX = 1.0f / nombre_Colonnes;
         float stepY = 1.0f / nombre_Lignes;
 
         // Genere les vertices et les coordonnées UV
         int vertIndex = 0; // index pour les vertices
         for (int y = 0; y <= nombre_Lignes; y++)
         {
-            for (int x = 0; x <= nb_Colonnes; x++)
+            for (int x = 0; x <= nombre_Colonnes; x++)
             {
                 vertices[vertIndex] = new Vector3(x * stepX, y * stepY, 0); // genere les vertices en fonction des pas et de l'index
-                uv[vertIndex] = new Vector2(x / (float)nb_Colonnes, y / (float)nombre_Lignes); // genere les coordonnées UV
+                uv[vertIndex] = new Vector2(x / (float)nombre_Colonnes, y / (float)nombre_Lignes); // genere les coordonnées UV
                 vertIndex++; // on augmente l'index pour passer au suivant
             }
         }
@@ -62,12 +62,12 @@ public class Mesh_rectangle_parametric : MonoBehaviour
         int triIndex = 0; // index pour les triangles
         for (int y = 0; y < nombre_Lignes; y++)
         {
-            for (int x = 0; x < nb_Colonnes; x++)
+            for (int x = 0; x < nombre_Colonnes; x++)
             {
                 // calcul des 4 indices
-                int topLeft = y * (nb_Colonnes + 1) + x;  
+                int topLeft = y * (nombre_Colonnes + 1) + x;  
                 int topRight = topLeft + 1;
-                int bottomLeft = topLeft + (nb_Colonnes + 1);
+                int bottomLeft = topLeft + (nombre_Colonnes + 1);
                 int bottomRight = bottomLeft + 1;
 
 
