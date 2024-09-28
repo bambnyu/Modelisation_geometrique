@@ -24,9 +24,9 @@ public class Mesh_rectangle_parametric : MonoBehaviour
 
         // genere le mesh
         mesh = new Mesh();
-        mesh.name = "Custom mesh";
+        mesh.name = "Mesh Rectangle parametric";
         // assigne le mesh au meshFilter et au meshRenderer
-        meshObject = new GameObject("Mesh Object Parametric", typeof(MeshRenderer), typeof(MeshFilter));
+        meshObject = new GameObject("Mesh Rectangle Parametric", typeof(MeshRenderer), typeof(MeshFilter));
         meshObject.GetComponent<MeshFilter>().mesh = mesh;
         // assigne les différents matériaux au mesh
 
@@ -65,7 +65,7 @@ public class Mesh_rectangle_parametric : MonoBehaviour
             for (int x = 0; x < nb_Colonnes; x++)
             {
                 // calcul des 4 indices
-                int topLeft = y * (nb_Colonnes + 1) + x;
+                int topLeft = y * (nb_Colonnes + 1) + x;  
                 int topRight = topLeft + 1;
                 int bottomLeft = topLeft + (nb_Colonnes + 1);
                 int bottomRight = bottomLeft + 1;

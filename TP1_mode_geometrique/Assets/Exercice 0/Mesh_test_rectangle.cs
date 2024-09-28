@@ -23,10 +23,10 @@ public class Mesh_test : MonoBehaviour
 
         // On crée un mesh et on l'assigne à l'objet meshObject
         mesh = new Mesh();
-        mesh.name = "Custom mesh";
+        mesh.name = "Mesh test Rectangle";
 
         // On crée un objet meshObject et on lui assigne le mesh
-        meshObject = new GameObject("Mesh Object", typeof(MeshRenderer), typeof(MeshFilter));
+        meshObject = new GameObject("Mesh test", typeof(MeshRenderer), typeof(MeshFilter));
         meshObject.GetComponent<MeshFilter>().mesh = mesh;
 
         // On assigne les données du mesh aux variables du mesh

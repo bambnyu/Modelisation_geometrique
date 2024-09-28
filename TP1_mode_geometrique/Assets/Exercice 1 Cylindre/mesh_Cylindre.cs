@@ -23,9 +23,9 @@ public class Mesh_Cylindre : MonoBehaviour
         GenerateCylinderData();
         // on va générer le mesh du cylindre
         mesh = new Mesh();
-        mesh.name = "Cylindre";
+        mesh.name = "Mesh Cylindre";
         // on va assigner les données du mesh
-        meshObject = new GameObject("Mesh Object Cylindre", typeof(MeshRenderer), typeof(MeshFilter));
+        meshObject = new GameObject("Mesh Cylindre", typeof(MeshRenderer), typeof(MeshFilter));
         meshObject.GetComponent<MeshFilter>().mesh = mesh;
         // on va assigner le material
         mesh.vertices = vertices; // Assigner les sommets

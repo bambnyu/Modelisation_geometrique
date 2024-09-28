@@ -199,9 +199,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rayon: 1
-  nombre_Paralleles: 10
-  nombre_Meridiens: 20
-  taille_bouche: 3
+  meridiens: 24
+  paralleles: 16
+  sliceStartAngle: 0
+  sliceAngleWidth: 0.7853982
 --- !u!4 &263728984
 Transform:
   m_ObjectHideFlags: 0
@@ -433,8 +434,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rayon: 1
-  nombre_Paralleles: 10
-  nombre_Meridiens: 20
+  meridiens: 24
+  paralleles: 16
 --- !u!4 &1213739334
 Transform:
   m_ObjectHideFlags: 0

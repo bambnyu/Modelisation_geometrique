@@ -2,134 +2,134 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class meshpacman : MonoBehaviour
+public class Mesh_PacMan : MonoBehaviour
 {
-    public float rayon = 1.0f; // Rayon de la sphère
-    public int nombre_Paralleles = 10; // Nombre de parallèles (lignes horizontales)
-    public int nombre_Meridiens = 20; // Nombre de méridiens (lignes verticales)
-    public int taille_bouche = 3;
+    public float rayon = 1.0f;   // Rayon de la sphère
+    public int meridiens = 24;   // Nombre de segments horizontaux (méridiens)
+    public int paralleles = 16;  // Nombre de segments verticaux (parallèles)
+    public float sliceStartAngle = 0f; // Angle de départ pour supprimer une tranche (en radians)
+    public float sliceAngleWidth = Mathf.PI / 4; // Largeur de la tranche à supprimer (en radians)
 
+    // Données du mesh
     private Vector3[] vertices;
     private Vector2[] uv;
     private int[] triangles;
 
+    // L'objet mesh et le mesh
     private GameObject meshObject;
     private Mesh mesh;
 
     void Start()
     {
+        // Générer les données de la sphère
         GenerateSphereData();
 
+        // Créer le mesh
         mesh = new Mesh();
-        mesh.name = "Sphère";
-
-        meshObject = new GameObject("Mesh Object Pac man", typeof(MeshRenderer), typeof(MeshFilter));
-
+        mesh.name = "Pacman Mesh";
+        meshObject = new GameObject("Mesh Pacman", typeof(MeshRenderer), typeof(MeshFilter));
         meshObject.GetComponent<MeshFilter>().mesh = mesh;
 
-        mesh.vertices = vertices; // Assigne les sommets
-        mesh.uv = uv; // Assigne les coordonnées UV
-        mesh.triangles = triangles; // Assigne les triangles
-
+        // Affecter les données du mesh
+        mesh.vertices = vertices;
+        mesh.uv = uv;
+        mesh.triangles = triangles;
     }
 
     private void GenerateSphereData()
     {
-        int verticesCount = (nombre_Paralleles + 1) * (nombre_Meridiens + 1) + 2; // Sommets pour chaque parallèle + les pôles Nord et Sud
-        vertices = new Vector3[verticesCount];
-        uv = new Vector2[verticesCount];
-        triangles = new int[nombre_Meridiens * nombre_Paralleles * 6]; // 6 indices par face (2 triangles)
+        // Calculer le nombre de vertices et de triangles
+        int verticesCount = (meridiens + 1) * (paralleles + 1) + 1; // vertices + centre
+        vertices = new Vector3[verticesCount]; // Tableau des vertices
+        uv = new Vector2[verticesCount]; // Tableau des UVs
 
-        float phiStep = Mathf.PI / nombre_Paralleles; // Division de l'angle en latitude (parallèles)
-        float thetaStep = 2 * Mathf.PI / nombre_Meridiens; // Division de l'angle en longitude (méridiens)
+        List<int> triangleList = new List<int>(); // Liste temporaire pour stocker les triangles
+
+        float meridienStep = 2 * Mathf.PI / meridiens; // Step pour la longitude
+        float paralleleStep = Mathf.PI / paralleles;   // Step pour la latitude
 
         int vertIndex = 0;
-        int triIndex = 0;
+        int centerIndex = verticesCount - 1; // Dernier index pour le centre de la sphère
 
-        // Pôle nord
-        vertices[vertIndex] = new Vector3(0, rayon, 0); // Sommet du pôle nord
-        uv[vertIndex] = new Vector2(0.5f, 1.0f);
-        int poleNord = vertIndex; // Stocker l'index du pôle nord
-        vertIndex++;
-
-        // Générer les sommets pour chaque parallèle
-        for (int i = 0; i <= nombre_Paralleles; i++)
+        // Générer les vertices et UVs
+        for (int lat = 0; lat <= paralleles; lat++) // Latitude
         {
-            float phi = i * phiStep;
-            float sinPhi = Mathf.Sin(phi);
-            float cosPhi = Mathf.Cos(phi);
+            // valeurs pour la latitude
+            float theta = lat * paralleleStep;
+            float sinTheta = Mathf.Sin(theta);
+            float cosTheta = Mathf.Cos(theta);
 
-            for (int j = 0; j <= nombre_Meridiens ; j++)
+            for (int lon = 0; lon <= meridiens; lon++) // Longitude
             {
-                float theta = j * thetaStep;
-                float x = rayon * sinPhi * Mathf.Cos(theta);
-                float z = rayon * sinPhi * Mathf.Sin(theta);
-                float y = rayon * cosPhi;
+                // valeurs pour la longitude
+                float phi = lon * meridienStep;
+                float sinPhi = Mathf.Sin(phi);
+                float cosPhi = Mathf.Cos(phi);
 
-                vertices[vertIndex] = new Vector3(x, y, z); // Position des sommets
-                uv[vertIndex] = new Vector2(j / (float)nombre_Meridiens, 1 - (i / (float)nombre_Paralleles)); // UV mapping
+                // Calculer les coordonnées du vertex
+                float x = sinTheta * cosPhi * rayon;
+                float y = cosTheta * rayon;
+                float z = sinTheta * sinPhi * rayon;
+
+                vertices[vertIndex] = new Vector3(x, y, z); // Ajouter le vertex
+
+                // UV mapping 
+                uv[vertIndex] = new Vector2((float)lon / meridiens, (float)lat / paralleles);
+
+                // Générer les triangles pour les faces de la sphère
+                if (lat < paralleles && lon < meridiens)  // Ne pas générer de triangles pour le dernier parallèle et le dernier méridien
+                {
+                    // Vérifier si cette longitude se trouve pas dans la tranche à supprimer comme ca on ne génère pas de triangles pour le trou
+                    if (phi < sliceStartAngle || phi >= sliceStartAngle + sliceAngleWidth) // Si la longitude n'est pas dans la tranche
+                    {
+                        int nextLat = lat + 1;
+                        int nextLon = lon + 1;
+
+                        // Ajouter les triangles 1 !! attention à l'ordre des vertices
+                        triangleList.Add(vertIndex);
+                        triangleList.Add(vertIndex + meridiens + 2);
+                        triangleList.Add(vertIndex + meridiens + 1);
+                        // Ajouter les triangles 2
+                        triangleList.Add(vertIndex);
+                        triangleList.Add(vertIndex + 1);
+                        triangleList.Add(vertIndex + meridiens + 2);
+                    }
+                }
+
                 vertIndex++;
             }
         }
 
-        // Pôle sud
-        vertices[vertIndex] = new Vector3(0, -rayon, 0); // Sommet du pôle sud
-        uv[vertIndex] = new Vector2(0.5f, 0.0f);
-        int poleSud = vertIndex; // Stocker l'index du pôle sud
-        vertIndex++;
+        // Ajouter le point central
+        vertices[centerIndex] = Vector3.zero; // Centre de la sphère
 
-        // Générer les triangles reliant le pôle nord aux premiers parallèles
-        for (int j = 0; j < nombre_Meridiens; j++)
+        // Créer les triangles reliant les bords du trou au centre
+        for (int lat = 0; lat < paralleles; lat++)
         {
-            triangles[triIndex++] = poleNord;
-            triangles[triIndex++] = j + 1;
-            triangles[triIndex++] = j;
+            // Pour le bord gauche de la tranche (sliceStartAngle)
+            int leftIndex = lat * (meridiens + 1) + Mathf.FloorToInt(sliceStartAngle / meridienStep);
+            int leftNextLatIndex = leftIndex + (meridiens + 1);
+
+            // Triangle reliant le centre au bord gauche (sliceStartAngle)
+            triangleList.Add(leftIndex);
+            triangleList.Add(centerIndex);
+            triangleList.Add(leftNextLatIndex);
+
+            // Pour le bord droit de la tranche (sliceStartAngle + sliceAngleWidth)
+            int rightIndex = lat * (meridiens + 1) + Mathf.FloorToInt((sliceStartAngle + sliceAngleWidth) / meridienStep);
+            int rightNextLatIndex = rightIndex + (meridiens + 1);
+
+            // Triangle reliant le centre au bord droit (sliceEndAngle)
+            triangleList.Add(rightNextLatIndex);
+            triangleList.Add(centerIndex);
+            triangleList.Add(rightIndex);
         }
 
-        // Générer les triangles pour le reste de la sphère (entre les parallèles)
-        for (int i = 0; i < nombre_Paralleles - 1; i++)
-        {
-            for (int j = 0; j < nombre_Meridiens - taille_bouche; j++)
-            {
-                int current = i * (nombre_Meridiens + 1) + j + 1;
-                int next = current + nombre_Meridiens + 1;
-
-                // Triangle 1
-                triangles[triIndex++] = current;
-                triangles[triIndex++] = current + 1;
-                triangles[triIndex++] = next;
-
-                // Triangle 2
-                triangles[triIndex++] = current + 1;
-                triangles[triIndex++] = next + 1;
-                triangles[triIndex++] = next ;
-            }
-        }
-
-        // Générer les triangles reliant le dernier parallèle au pôle sud
-        int baseIndex = (nombre_Paralleles - 1) * (nombre_Meridiens + 1);
-        for (int j = 0; j < nombre_Meridiens-taille_bouche +1 ; j++)
-        {
-            triangles[triIndex++] = poleSud;
-            triangles[triIndex++] = baseIndex + j;
-            triangles[triIndex++] = baseIndex + j + 1;
-        }
-
-        // fermer la bouche du pac man  
-        for (int i = 0; i < nombre_Paralleles - 1; i++)
-        {
-            for (int j = nombre_Meridiens - taille_bouche; j < nombre_Meridiens; j++)
-            {
-                // ici on veut fermer la bouche du pac man pour pas que ce soit du vide
-                // donc on veut prendre les cotes et les refermer vers le centre de de la sphere sur tout l'axe y
-            }
-        }
-
-     }
+        // Convertir la liste des triangles en tableau
+        triangles = triangleList.ToArray();
+    }
 
     void Update()
     {
     }
 }
-
-

@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class Mesh_TruncatedCone : MonoBehaviour
 {
+    // on va faire un cone tronqué donc on aura un rayon bas et un rayon haut
     public float rayonBas = 1.0f;  // Rayon de la base
     public float rayonHaut = 0.5f; // Rayon au sommet (tronqué)
+
     public float hauteur = 2.0f;   // Hauteur totale du cône
     public int nombre_Meridiens = 20; // Nombre de méridiens (lignes verticales)
 
@@ -18,15 +20,14 @@ public class Mesh_TruncatedCone : MonoBehaviour
 
     void Start()
     {
+        // Génére les données du cône tronqué
         GenerateConeData();
-
+        // Crée le mesh du cône 
         mesh = new Mesh();
-        mesh.name = "Cône Tronqué";
-
-        meshObject = new GameObject("Mesh Object Cone", typeof(MeshRenderer), typeof(MeshFilter));
-
+        mesh.name = " Mesh Cône Tronqué";
+        // Crée un objet avec un MeshFilter et un MeshRenderer et assigne le mesh
+        meshObject = new GameObject("Mesh Cone", typeof(MeshRenderer), typeof(MeshFilter));
         meshObject.GetComponent<MeshFilter>().mesh = mesh;
-
         mesh.vertices = vertices; // Assigner les sommets
         mesh.uv = uv; // Assigner les coordonnées UV
         mesh.triangles = triangles; // Assigner les triangles
@@ -35,11 +36,12 @@ public class Mesh_TruncatedCone : MonoBehaviour
 
     private void GenerateConeData()
     {
+        // Calculer le nombre de sommets et de triangles
         int verticesCount = (nombre_Meridiens + 1) * 2 + (nombre_Meridiens * 2); // Sommets pour le corps + bords des couvercles
-        vertices = new Vector3[verticesCount];
+        vertices = new Vector3[verticesCount]; // Sommets pour le corps + bords des couvercles
         uv = new Vector2[verticesCount];
         triangles = new int[nombre_Meridiens * 12]; // Triangles pour le corps + couvercles
-
+        // Calculer l'angle entre chaque méridien 
         float angleStep = 2 * Mathf.PI / nombre_Meridiens;
 
         int vertIndex = 0;
@@ -51,22 +53,22 @@ public class Mesh_TruncatedCone : MonoBehaviour
         // Générer les sommets pour le corps du cone (contour)
         for (int i = 0; i <= nombre_Meridiens; i++)
         {
-            float angle = i * angleStep;
+            float angle = i * angleStep; // Angle du méridien
             float x;
             float z;
 
             // Sommets bas du cone (contour)
-            x = Mathf.Cos(angle) * rayonBas;
-            z = Mathf.Sin(angle) * rayonBas;
-            vertices[vertIndex] = new Vector3(x, 0, z);
-            uv[vertIndex] = new Vector2(i / (float)nombre_Meridiens, 0);
+            x = Mathf.Cos(angle) * rayonBas; // Calculer la coordonnée x
+            z = Mathf.Sin(angle) * rayonBas; // Calculer la coordonnée z
+            vertices[vertIndex] = new Vector3(x, 0, z); // Créer le sommet
+            uv[vertIndex] = new Vector2(i / (float)nombre_Meridiens, 0); // Coordonnées UV
             vertIndex++;
 
             // Sommets haut du cone (contour)
-            x = Mathf.Cos(angle) * rayonHaut;
-            z = Mathf.Sin(angle) * rayonHaut;
-            vertices[vertIndex] = new Vector3(x, hauteur, z);
-            uv[vertIndex] = new Vector2(i / (float)nombre_Meridiens, 1);
+            x = Mathf.Cos(angle) * rayonHaut; // Calculer la coordonnée x
+            z = Mathf.Sin(angle) * rayonHaut; // Calculer la coordonnée z
+            vertices[vertIndex] = new Vector3(x, hauteur, z); // Créer le sommet
+            uv[vertIndex] = new Vector2(i / (float)nombre_Meridiens, 1); // Coordonnées UV
             vertIndex++;
 
 
@@ -74,11 +76,11 @@ public class Mesh_TruncatedCone : MonoBehaviour
             {
                 // Triangles du corps (contour uniquement)
                 int nextIndex = (i + 1) * 2;
-
+                // Triangle 1
                 triangles[triIndex++] = i * 2;
                 triangles[triIndex++] = i * 2 + 1;
                 triangles[triIndex++] = nextIndex + 1;
-
+                // Triangle 2
                 triangles[triIndex++] = i * 2;
                 triangles[triIndex++] = nextIndex + 1;
                 triangles[triIndex++] = nextIndex;
@@ -111,6 +113,6 @@ public class Mesh_TruncatedCone : MonoBehaviour
 
 
     void Update()
-        {
-        }
+    {
     }
+}
