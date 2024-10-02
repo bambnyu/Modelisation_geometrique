@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ede31a6b0bd1fc4abc47e4e8400fabb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  filePath: Assets/Models/buddha.off
+  filePath: Assets/Models/bunny.off
 --- !u!4 &218528916
 Transform:
   m_ObjectHideFlags: 0

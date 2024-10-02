@@ -12,7 +12,7 @@ public class OFFMeshLoader : MonoBehaviour
     private Mesh mesh; // Le mesh Unity
 
     // Chemin vers le fichier OFF
-    public string filePath = "Assets/Models/buddha.off";
+    public string filePath = "Assets/Models/bunny.off";
 
     void Start()
     {
@@ -46,6 +46,9 @@ public class OFFMeshLoader : MonoBehaviour
 
         // Assigner le mesh à l'objet courant
         GetComponent<MeshFilter>().mesh = mesh;
+
+        // Exporter le fichier OBJ
+        ExportOBJFile("Assets/Models/exported_mesh.obj");
     }
 
     void LoadOFFFile(string path)
@@ -165,5 +168,39 @@ public class OFFMeshLoader : MonoBehaviour
             normals[i] = normals[i].normalized;
         }
     }
+
     // methode pour export de fichier en obj
+    void ExportOBJFile(string exportPath)
+    {
+        using (StreamWriter sw = new StreamWriter(exportPath))
+        {
+            // Écrire les sommets
+            foreach (Vector3 vertex in vertices)
+            {
+                sw.WriteLine($"v {vertex.x.ToString(CultureInfo.InvariantCulture)} {vertex.y.ToString(CultureInfo.InvariantCulture)} {vertex.z.ToString(CultureInfo.InvariantCulture)}");
+            }
+
+            // Écrire les normales
+            foreach (Vector3 normal in normals)
+            {
+                sw.WriteLine($"vn {normal.x.ToString(CultureInfo.InvariantCulture)} {normal.y.ToString(CultureInfo.InvariantCulture)} {normal.z.ToString(CultureInfo.InvariantCulture)}");
+            }
+
+            // Écrire les faces (triangles)
+            for (int i = 0; i < triangles.Count; i += 3)
+            {
+                int v1 = triangles[i] + 1;
+                int v2 = triangles[i + 1] + 1;
+                int v3 = triangles[i + 2] + 1;
+
+                
+                // Écrire la face avec les indices des sommets et des normales
+                sw.WriteLine($"f {v1}//{v1} {v2}//{v2} {v3}//{v3}");
+            }
+        }
+
+
+        Debug.Log("Export du fichier OBJ terminé : " + exportPath);
+    }
+
 }
