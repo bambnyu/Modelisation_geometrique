@@ -7,6 +7,10 @@ public class Gestion : MonoBehaviour
     private Mesh_Sphere sphere;
 
     private Octree octree;
+
+    private Vector3 sphereCenter;
+    private float sphereRadius;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -14,14 +18,41 @@ public class Gestion : MonoBehaviour
         // Initialiser l'octree
         octree = new Octree(Vector3.zero, 10.0f, 20); // Vous pouvez ajuster la taille et la profondeur
 
+        sphereCenter = Vector3.zero;  // Assuming the sphere is centered at origin
+        sphereRadius = sphere.rayon;
+
+
         // Voxeliser la sphère
         octree.VoxelizeSphere(sphere);
 
-        // Récupérer et afficher les voxels sous forme de cubes
+        DisplayVoxelsInContactWithSphere(sphereCenter, sphereRadius);
+
+
+        //// Récupérer et afficher les voxels sous forme de cubes
+        //List<Bounds> voxels = octree.GetVoxels();
+        //foreach (var voxel in voxels)
+        //{
+        //    CreateCube(voxel);
+        //}
+    }
+
+    void DisplayVoxelsInContactWithSphere(Vector3 sphereCenter, float sphereRadius)
+    {
         List<Bounds> voxels = octree.GetVoxels();
         foreach (var voxel in voxels)
         {
-            CreateCube(voxel);
+            // Get the center of the voxel
+            Vector3 voxelCenter = voxel.center;
+
+            // Calculate the distance from the voxel to the center of the sphere
+            float distanceToSphere = Vector3.Distance(voxelCenter, sphereCenter);
+
+            // Check if the voxel is within the sphere's radius
+            if (distanceToSphere <= sphereRadius)
+            {
+                // Create and display the cube if in contact with the sphere
+                CreateCube(voxel);
+            }
         }
     }
 

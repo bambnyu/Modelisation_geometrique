@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Mesh_Sphere 
 {
-    public float rayon = 1.0f;   // rayon de la sphère
+    public float rayon = 5.0f;   // rayon de la sphère
     public int meridiens = 24;  // nombre de segments horizontaux (méridiens)
     public int paralleles = 16;   // nombre de segments verticaux (parallèles)
 
