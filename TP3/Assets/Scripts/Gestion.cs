@@ -1,73 +1,63 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Gestion : MonoBehaviour
 {
-    private Mesh_Sphere sphere;
-
+    private GameObject sphere; // Utilisation de la sphère de unity (plus simple pour la creation, ma methode pour le tp1 etait pas la plus optimale comme base)
     private Octree octree;
 
     private Vector3 sphereCenter;
     private float sphereRadius;
 
-    // Start is called before the first frame update
+    
     void Start()
     {
-        sphere = new Mesh_Sphere();
+        // Créer une sphère Unity et définir ses propriétés
+        sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        sphere.transform.position = Vector3.zero; // Placer la sphère au centre de la scène
+        sphereRadius = 5.0f; // Définir le rayon de la sphère  (taille a bouger selon les questions)
+        sphere.transform.localScale = Vector3.one * sphereRadius * 2; // Ajuster l'échelle pour correspondre au rayon
+
         // Initialiser l'octree
-        octree = new Octree(Vector3.zero, 10.0f, 20); // Vous pouvez ajuster la taille et la profondeur
+        octree = new Octree(Vector3.zero, 10.0f, 20); // Définir la taille et la profondeur de l'octree
 
-        sphereCenter = Vector3.zero;  // Assuming the sphere is centered at origin
-        sphereRadius = sphere.rayon;
+        // Définir le centre de la sphère pour l'affichage des voxels
+        sphereCenter = sphere.transform.position;
 
+        // Voxeliser la sphère dans l'octree
+        octree.VoxelizeSphere(sphereCenter, sphereRadius);
 
-        // Voxeliser la sphère
-        octree.VoxelizeSphere(sphere);
-
+        // Afficher les voxels en contact avec la sphère
         DisplayVoxelsInContactWithSphere(sphereCenter, sphereRadius);
-
-
-        //// Récupérer et afficher les voxels sous forme de cubes
-        //List<Bounds> voxels = octree.GetVoxels();
-        //foreach (var voxel in voxels)
-        //{
-        //    CreateCube(voxel);
-        //}
     }
 
+    // Méthode pour afficher les voxels en contact avec la sphère
     void DisplayVoxelsInContactWithSphere(Vector3 sphereCenter, float sphereRadius)
     {
-        List<Bounds> voxels = octree.GetVoxels();
+        List<Bounds> voxels = octree.GetVoxels(); // Récupérer tous les voxels de l'octree
         foreach (var voxel in voxels)
         {
-            // Get the center of the voxel
             Vector3 voxelCenter = voxel.center;
-
-            // Calculate the distance from the voxel to the center of the sphere
             float distanceToSphere = Vector3.Distance(voxelCenter, sphereCenter);
 
-            // Check if the voxel is within the sphere's radius
+            // Vérifier si le voxel est à l'intérieur du rayon de la sphère
             if (distanceToSphere <= sphereRadius)
             {
-                // Create and display the cube if in contact with the sphere
-                CreateCube(voxel);
+                CreateCube(voxel); // Créer un cube pour chaque voxel en contact avec la sphère
             }
         }
     }
 
-    // Méthode pour créer un cube basé sur les bounds d'un voxel
+    // Méthode pour créer un cube basé sur les limites (Bounds) d'un voxel
     void CreateCube(Bounds bounds)
     {
         GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
-        // Positionner le cube au centre des bounds du voxel
+        // Positionner et dimensionner le cube pour qu'il corresponde aux limites du voxel
         cube.transform.position = bounds.center;
-
-        // Ajuster la taille du cube selon les dimensions du voxel
         cube.transform.localScale = bounds.size;
 
-        // Optionnel: Appliquer une couleur ou un matériau au cube
-        cube.GetComponent<Renderer>().material.color = Color.green; // Exemple de couleur
+        // Mettre une couleur  verte pour le cube pour que ce soit plus visuel
+        cube.GetComponent<Renderer>().material.color = Color.green;
     }
 }
