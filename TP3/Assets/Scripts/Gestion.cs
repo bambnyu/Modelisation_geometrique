@@ -8,8 +8,12 @@ public class Gestion : MonoBehaviour
     void Start()
     {
         // Initialisation de deux sphères
+        
         SphereManager sphere1 = new SphereManager(Vector3.zero, 5.0f, 10.0f, 20);
-        SphereManager sphere2 = new SphereManager(new Vector3(10.0f, 0.0f, 0.0f), 5.0f, 10.0f, 20);
+        SphereManager sphere2 = new SphereManager(new Vector3(6.0f, 0.0f, 0.0f), 5.0f, 10.0f, 20);
+        //float radius = 5f;
+        //SphereManager sphere1 = new SphereManager(new Vector3(0, 0, 0), radius, 20f, 4);
+        //SphereManager sphere2 = new SphereManager(new Vector3(3, 0, 0), radius, 20f, 4);
 
         spheres.Add(sphere1);
         spheres.Add(sphere2);
