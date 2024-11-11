@@ -68,4 +68,32 @@ public class SphereManager
         return intersectionVoxels;
     }
 
+    public static List<Bounds> UnionAll(List<SphereManager> spheres)
+    {
+        HashSet<Bounds> unionVoxels = new HashSet<Bounds>();
+
+        // Add voxels in contact from each sphere
+        foreach (var sphere in spheres)
+        {
+            unionVoxels.UnionWith(sphere.GetVoxelsInContact());
+        }
+
+        return new List<Bounds>(unionVoxels);
+    }
+
+    public static List<Bounds> IntersectionAll(List<SphereManager> spheres)
+    {
+        if (spheres.Count == 0) return new List<Bounds>();
+
+        // Start with the voxels of the first sphere
+        HashSet<Bounds> intersectionVoxels = new HashSet<Bounds>(spheres[0].GetVoxelsInContact());
+
+        // Intersect with each subsequent sphere's voxels
+        for (int i = 1; i < spheres.Count; i++)
+        {
+            intersectionVoxels.IntersectWith(spheres[i].GetVoxelsInContact());
+        }
+
+        return new List<Bounds>(intersectionVoxels);
+    }
 }

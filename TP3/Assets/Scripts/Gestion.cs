@@ -4,7 +4,7 @@ using UnityEngine;
 public class Gestion : MonoBehaviour
 {
     public int numSpheres = 5; // Number of spheres to generate, configurable in Inspector
-    public float octreeSize = 10.0f; // Taille de l'octree -> la resolution de la grille taille interessante pour les tests entre 5 et 10
+    public float octreeSize = 10.0f; // Size of the octree
     public int maxDepth = 20; // Max depth for octree resolution
     public float sphereRadius = 5.0f; // Radius for each sphere
 
@@ -31,14 +31,16 @@ public class Gestion : MonoBehaviour
             DisplayVoxelsInContactWithSphere(sphere, Color.green);
         }
 
-        // Display union and intersection if there are at least two spheres on the first two spheres in the list 
-        if (spheres.Count >= 2)
+        // Display union and intersection for all spheres
+        if (spheres.Count > 1)
         {
-            // Display voxels in union (blue)
-            //DisplayVoxels(SphereManager.Union(spheres[0], spheres[1]), Color.blue);
+            // Union of all spheres (blue)
+            //DisplayVoxels(SphereManager.UnionAll(spheres), Color.blue);
 
+            // Intersection of all spheres (red)
+            //DisplayVoxels(SphereManager.IntersectionAll(spheres), Color.red); // faut que les voxels soient en contact avec toutes les spheres ce qui est rare
             // Display voxels in intersection (red)
-            //DisplayVoxels(SphereManager.Intersection(spheres[0], spheres[1]), Color.red);
+            //DisplayVoxels(SphereManager.Intersection(spheres[0], spheres[1]), Color.red); // faut que les voxels soient en contact avec les deux spheres ce qui est plus commun
         }
     }
 
