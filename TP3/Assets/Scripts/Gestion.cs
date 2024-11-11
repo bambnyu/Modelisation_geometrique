@@ -22,7 +22,7 @@ public class Gestion : MonoBehaviour
         // Affichage des voxels en contact pour chaque sphère individuellement
         foreach (var sphere in spheres)
         {
-            DisplayVoxelsInContactWithSphere(sphere, Color.green);
+            //DisplayVoxelsInContactWithSphere(sphere, Color.green);
         }
 
         // Ne  pas les afficher en meme temps ca a pas de sens
@@ -30,7 +30,7 @@ public class Gestion : MonoBehaviour
         //DisplayVoxels(SphereManager.Union(sphere1, sphere2), Color.blue);
 
         //// Affichage des voxels en intersection (couleur rouge)
-        //DisplayVoxels(SphereManager.Intersection(sphere1, sphere2), Color.red);
+        DisplayVoxels(SphereManager.Intersection(sphere1, sphere2), Color.red);
     }
 
     // Afficher les voxels en contact avec chaque sphère

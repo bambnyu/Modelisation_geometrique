@@ -48,19 +48,24 @@ public class SphereManager
     {
         List<Bounds> intersectionVoxels = new List<Bounds>();
 
-        // Récupère les voxels en contact pour chaque sphère
+        // Retrieve the voxels in contact for each sphere
         List<Bounds> voxelsSphere1 = sphere1.GetVoxelsInContact();
         List<Bounds> voxelsSphere2 = sphere2.GetVoxelsInContact();
 
-        // Pour chaque voxel de la première sphère, vérifie s'il est aussi présent dans la deuxième
-        foreach (var voxel in voxelsSphere1)
+        // Check for intersecting voxels by comparing bounds using Intersects method
+        foreach (var voxel1 in voxelsSphere1)
         {
-            if (voxelsSphere2.Contains(voxel))
+            foreach (var voxel2 in voxelsSphere2)
             {
-                intersectionVoxels.Add(voxel);
+                if (voxel1.Intersects(voxel2))
+                {
+                    intersectionVoxels.Add(voxel1);
+                    break; // Move to the next voxel1 after finding an intersection
+                }
             }
         }
 
         return intersectionVoxels;
     }
+
 }
