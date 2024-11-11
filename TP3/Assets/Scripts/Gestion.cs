@@ -10,38 +10,54 @@ public class Gestion : MonoBehaviour
     void Start()
     {
         // Initialisation de deux sphères
-        
+
         SphereManager sphere1 = new SphereManager(Vector3.zero, 5.0f, octreeSize, 20);
         SphereManager sphere2 = new SphereManager(new Vector3(6.0f, 0.0f, 0.0f), 5.0f, octreeSize, 20);
 
         // Affiche les voxels en union et en intersection
-        
+
         spheres.Add(sphere1);
         spheres.Add(sphere2);
 
-        // Affichage des voxels en contact pour chaque sphère
+        // Affichage des voxels en contact pour chaque sphère individuellement
         foreach (var sphere in spheres)
         {
-            DisplayVoxelsInContactWithSphere(sphere);
+            DisplayVoxelsInContactWithSphere(sphere, Color.green);
         }
+
+        // Ne  pas les afficher en meme temps ca a pas de sens
+        //// Affichage des voxels en union (couleur bleue)
+        ////DisplayVoxels(SphereManager.Union(sphere1, sphere2), Color.blue);
+
+        //// Affichage des voxels en intersection (couleur rouge)
+        //DisplayVoxels(SphereManager.Intersection(sphere1, sphere2), Color.red);
     }
 
     // Afficher les voxels en contact avec chaque sphère
-    void DisplayVoxelsInContactWithSphere(SphereManager sphere)
+    void DisplayVoxelsInContactWithSphere(SphereManager sphere, Color color)
     {
         List<Bounds> voxels = sphere.GetVoxelsInContact();
         foreach (var voxel in voxels)
         {
-            CreateCube(voxel);
+            CreateCube(voxel, color);
+        }
+    }
+
+    // Afficher une liste de voxels avec une couleur spécifique
+    void DisplayVoxels(List<Bounds> voxels, Color color)
+    {
+        foreach (var voxel in voxels)
+        {
+            CreateCube(voxel, color);
         }
     }
 
     // Méthode pour créer un cube basé sur les limites (Bounds) d'un voxel
-    void CreateCube(Bounds bounds)
+    void CreateCube(Bounds bounds, Color color)
     {
         GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
         cube.transform.position = bounds.center;
         cube.transform.localScale = bounds.size;
-        cube.GetComponent<Renderer>().material.color = Color.green;
+        cube.GetComponent<Renderer>().material.color = color;
     }
 }
