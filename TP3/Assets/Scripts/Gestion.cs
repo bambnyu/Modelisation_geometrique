@@ -27,7 +27,7 @@ public class Gestion : MonoBehaviour
 
         // Ne  pas les afficher en meme temps ca a pas de sens
         //// Affichage des voxels en union (couleur bleue)
-        ////DisplayVoxels(SphereManager.Union(sphere1, sphere2), Color.blue);
+        //DisplayVoxels(SphereManager.Union(sphere1, sphere2), Color.blue);
 
         //// Affichage des voxels en intersection (couleur rouge)
         //DisplayVoxels(SphereManager.Intersection(sphere1, sphere2), Color.red);
