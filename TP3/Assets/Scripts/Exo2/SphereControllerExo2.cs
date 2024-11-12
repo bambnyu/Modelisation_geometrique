@@ -2,17 +2,17 @@ using UnityEngine;
 
 public class SphereControllerExo2 : MonoBehaviour
 {
-    public float moveSpeed = 5.0f;
-    public float potentialIncrement = 0.1f;
-    public VoxelManagerExo2 voxelManager;
+    public float moveSpeed = 5.0f; // Vitesse de déplacement de la sphère
+    public float potentialIncrement = 1.0f; // Incrément de potentiel par mise à jour
+    public VoxelManagerExo2 voxelManager; // Référence vers le gestionnaire de voxels
 
     void Update()
     {
-        // Move sphere with arrow keys
-        float horizontal = Input.GetAxis("Horizontal"); // A/D for x-axis
-        float vertical = Input.GetAxis("Vertical"); // W/S for z-axis
+        // Déplacer la sphère avec les touches de direction
+        float horizontal = Input.GetAxis("Horizontal"); // Axe X avec A/D
+        float vertical = Input.GetAxis("Vertical"); // Axe Z avec W/S
 
-        // Use Q and E for y-axis movement
+        // Utiliser Q et E pour le mouvement vertical (axe Y)
         float yMovement = 0;
         if (Input.GetKey(KeyCode.Q)) yMovement = -1;
         if (Input.GetKey(KeyCode.E)) yMovement = 1;
@@ -20,7 +20,8 @@ public class SphereControllerExo2 : MonoBehaviour
         Vector3 movement = new Vector3(horizontal, yMovement, vertical) * moveSpeed * Time.deltaTime;
         transform.position += movement;
 
-        // Add potential at the sphere's position
+        // Ajout de potentiel avec message de débogage
+        Debug.Log($"Adding potential at position: {transform.position}");
         voxelManager.AddPotentialAtPosition(transform.position, potentialIncrement);
     }
 }

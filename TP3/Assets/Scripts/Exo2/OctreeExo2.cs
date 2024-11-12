@@ -5,17 +5,17 @@ public class OctreeExo2
 {
     private class Node
     {
-        public Bounds bounds;
-        public bool isLeaf = true;
-        public float potential = 0.0f;
-        public Node[] children = null;
+        public Bounds bounds; // Boîte englobante du nœud
+        public bool isLeaf = true; // Indique si le nœud est une feuille
+        public float potential = 0.0f; // Potentiel actuel du nœud
+        public Node[] children = null; // Sous-nœuds
+        public bool isVisible = false; // Indique si le voxel est déjà visible
 
         public Node(Bounds bounds)
         {
             this.bounds = bounds;
         }
 
-        // Subdivide the node into 8 children
         public void Subdivide()
         {
             children = new Node[8];
@@ -37,7 +37,7 @@ public class OctreeExo2
 
     private Node root;
     private float visibilityThreshold;
-    private float maxDepth;
+    private int maxDepth;
 
     public OctreeExo2(Vector3 position, float size, float visibilityThreshold, int maxDepth)
     {
@@ -46,26 +46,31 @@ public class OctreeExo2
         this.maxDepth = maxDepth;
     }
 
-    // Add potential to the node at the specified position
     public void AddPotential(Vector3 position, float amount)
     {
+        Debug.Log($"Adding potential in octree for position: {position}");
         AddPotentialRecursive(root, position, amount, 0);
     }
 
     private void AddPotentialRecursive(Node node, Vector3 position, float amount, int depth)
     {
-        if (depth >= maxDepth || node.bounds.size.x <= 1.0f)
+        if (!node.bounds.Contains(position))
         {
-            node.potential += amount;
-            if (node.potential >= visibilityThreshold)
-            {
-                CreateVisibleVoxel(node.bounds);
-            }
+            Debug.Log("Position is outside node bounds.");
             return;
         }
 
-        if (!node.bounds.Contains(position))
+        if (depth >= maxDepth || node.bounds.size.x <= 1.0f)
+        {
+            node.potential += amount;
+            Debug.Log($"Node potential: {node.potential}, Threshold: {visibilityThreshold}");
+            if (node.potential >= visibilityThreshold && !node.isVisible)
+            {
+                CreateVisibleVoxel(node.bounds);
+                node.isVisible = true;
+            }
             return;
+        }
 
         if (node.isLeaf)
         {
@@ -78,11 +83,12 @@ public class OctreeExo2
         }
     }
 
-    // Create a visible voxel in the scene
     private void CreateVisibleVoxel(Bounds bounds)
     {
+        Debug.Log("Creating voxel at: " + bounds.center);
         GameObject voxel = GameObject.CreatePrimitive(PrimitiveType.Cube);
         voxel.transform.position = bounds.center;
         voxel.transform.localScale = bounds.size;
+        voxel.GetComponent<Renderer>().material.color = Color.red;
     }
 }
