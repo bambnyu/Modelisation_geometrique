@@ -95,7 +95,7 @@ public class Octree
         }
 
         // Vérifier si le nœud intersecte la sphère
-        if (IsIntersectingSphere(node.bounds, sphereCenter, sphereRadius))
+        if (IsIntersectingSphere(node.bounds, sphereCenter, sphereRadius))  
         {
             if (depth < maxDepth)
             {

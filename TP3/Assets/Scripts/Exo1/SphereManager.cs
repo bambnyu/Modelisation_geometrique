@@ -3,23 +3,26 @@ using UnityEngine;
 
 public class SphereManager
 {
-    public Vector3 Center { get; private set; }
-    public float Radius { get; private set; }
-    public Octree Octree { get; private set; }
+    public Vector3 Center { get; private set; } // Centre de la sphère
+    public float Radius { get; private set; } // Rayon de la sphère
+    public Octree Octree { get; private set; } // Octree associé pour gérer la voxelisation
 
+    // Constructeur pour initialiser la sphère avec son centre, rayon, taille d'octree, et profondeur max
     public SphereManager(Vector3 center, float radius, float octreeSize, int maxDepth)
     {
         Center = center;
         Radius = radius;
         Octree = new Octree(center, octreeSize, maxDepth);
-        Octree.VoxelizeSphere(center, radius);
+        Octree.VoxelizeSphere(center, radius); // Voxeliser la sphère dans l'octree
     }
 
+    // Récupère les voxels en contact avec la sphère
     public List<Bounds> GetVoxelsInContact()
     {
-        List<Bounds> voxels = Octree.GetVoxels();
+        List<Bounds> voxels = Octree.GetVoxels(); // Tous les voxels de l'octree
         List<Bounds> inContact = new List<Bounds>();
 
+        // Filtrer les voxels qui sont en contact avec la sphère
         foreach (var voxel in voxels)
         {
             if (Vector3.Distance(voxel.center, Center) <= Radius)
@@ -35,7 +38,7 @@ public class SphereManager
     {
         HashSet<Bounds> unionVoxels = new HashSet<Bounds>();
 
-        // Ajoute les voxels en contact de chaque sphère dans l'ensemble (HashSet pour éviter les doublons)
+        // Ajoute les voxels en contact de chaque sphère dans l'ensemble (HashSet ---> éviter les doublons)
         unionVoxels.UnionWith(sphere1.GetVoxelsInContact());
         unionVoxels.UnionWith(sphere2.GetVoxelsInContact());
 
@@ -48,11 +51,11 @@ public class SphereManager
     {
         List<Bounds> intersectionVoxels = new List<Bounds>();
 
-        // Retrieve the voxels in contact for each sphere
+        // Récupérer les voxels en contact pour chaque sphère
         List<Bounds> voxelsSphere1 = sphere1.GetVoxelsInContact();
         List<Bounds> voxelsSphere2 = sphere2.GetVoxelsInContact();
 
-        // Check for intersecting voxels by comparing bounds using Intersects method
+        // Vérifier les voxels d'intersection en comparant les limites
         foreach (var voxel1 in voxelsSphere1)
         {
             foreach (var voxel2 in voxelsSphere2)
@@ -60,7 +63,7 @@ public class SphereManager
                 if (voxel1.Intersects(voxel2))
                 {
                     intersectionVoxels.Add(voxel1);
-                    break; // Move to the next voxel1 after finding an intersection
+                    break; // Passer au voxel suivant après avoir trouvé une intersection
                 }
             }
         }
@@ -68,11 +71,12 @@ public class SphereManager
         return intersectionVoxels;
     }
 
+    // Récupère l'union des voxels en contact pour une liste de sphères
     public static List<Bounds> UnionAll(List<SphereManager> spheres)
     {
         HashSet<Bounds> unionVoxels = new HashSet<Bounds>();
 
-        // Add voxels in contact from each sphere
+        // Ajouter les voxels en contact de chaque sphère
         foreach (var sphere in spheres)
         {
             unionVoxels.UnionWith(sphere.GetVoxelsInContact());
@@ -81,14 +85,15 @@ public class SphereManager
         return new List<Bounds>(unionVoxels);
     }
 
+    // Récupère l'intersection des voxels en contact pour une liste de sphères
     public static List<Bounds> IntersectionAll(List<SphereManager> spheres)
     {
         if (spheres.Count == 0) return new List<Bounds>();
 
-        // Start with the voxels of the first sphere
+        // Commencer avec les voxels de la première sphère
         HashSet<Bounds> intersectionVoxels = new HashSet<Bounds>(spheres[0].GetVoxelsInContact());
 
-        // Intersect with each subsequent sphere's voxels
+        // Intersection avec les voxels de chaque sphère suivante
         for (int i = 1; i < spheres.Count; i++)
         {
             intersectionVoxels.IntersectWith(spheres[i].GetVoxelsInContact());
