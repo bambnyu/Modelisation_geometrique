@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class OctreeExo2
 {
+    // Classe représentant un nœud dans l'octree
     private class Node
     {
         public Bounds bounds; // Boîte englobante du nœud
@@ -23,6 +24,7 @@ public class OctreeExo2
             Vector3 size = bounds.size / 2.0f;
             Vector3 center = bounds.center;
 
+            // Crée chaque sous-nœud avec la position correcte
             for (int i = 0; i < 8; i++)
             {
                 float xOffset = (i & 1) == 0 ? -size.x / 2 : size.x / 2;
@@ -40,6 +42,7 @@ public class OctreeExo2
     private float visibilityThreshold;
     private int maxDepth;
 
+    // Constructeur pour initialiser l'octree
     public OctreeExo2(Vector3 position, float size, float visibilityThreshold, int maxDepth)
     {
         root = new Node(new Bounds(position, new Vector3(size, size, size)));
@@ -47,7 +50,7 @@ public class OctreeExo2
         this.maxDepth = maxDepth;
     }
 
-    // Méthode modifiée pour inclure un rayon de voxelisation autour de la sphère
+    // Méthode pour ajouter du potentiel autour d'une sphère
     public void AddPotential(Vector3 sphereCenter, float sphereRadius, float amount)
     {
         AddPotentialRecursive(root, sphereCenter, sphereRadius, amount, 0);
@@ -58,6 +61,7 @@ public class OctreeExo2
         if (!node.bounds.Intersects(new Bounds(sphereCenter, Vector3.one * sphereRadius * 2)))
             return;
 
+        // Si profondeur max atteinte ou taille minimale, mise à jour du potentiel
         if (depth >= maxDepth || node.bounds.size.x <= 1.0f)
         {
             float distanceToCenter = Vector3.Distance(node.bounds.center, sphereCenter);
@@ -66,24 +70,27 @@ public class OctreeExo2
                 node.potential += amount;
                 if (node.potential >= visibilityThreshold && !node.isVisible)
                 {
-                    CreateVisibleVoxel(node.bounds);
+                    CreateVisibleVoxel(node.bounds); // Crée un voxel visible
                     node.isVisible = true;
                 }
             }
             return;
         }
 
+        // Subdivise le nœud s'il est une feuille
         if (node.isLeaf)
         {
             node.Subdivide();
         }
 
+        // Appel récursif sur chaque enfant
         foreach (var child in node.children)
         {
             AddPotentialRecursive(child, sphereCenter, sphereRadius, amount, depth + 1);
         }
     }
 
+    // Crée un voxel visible
     private void CreateVisibleVoxel(Bounds bounds)
     {
         GameObject voxel = GameObject.CreatePrimitive(PrimitiveType.Cube);

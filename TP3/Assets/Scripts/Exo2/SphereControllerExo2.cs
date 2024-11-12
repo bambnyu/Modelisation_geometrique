@@ -18,10 +18,11 @@ public class SphereControllerExo2 : MonoBehaviour
         if (Input.GetKey(KeyCode.Q)) yMovement = -1;
         if (Input.GetKey(KeyCode.E)) yMovement = 1;
 
+        // Calculer le déplacement et mettre à jour la position
         Vector3 movement = new Vector3(horizontal, yMovement, vertical) * moveSpeed * Time.deltaTime;
         transform.position += movement;
 
-        // Ajouter du potentiel autour de la position de la sphère pour créer un ensemble de voxels
+        // Ajouter du potentiel autour de la position de la sphère pour créer des voxels visibles
         Debug.Log($"Adding potential at position: {transform.position}");
         voxelManager.AddPotentialAtPosition(transform.position, sphereRadius, potentialIncrement);
     }

@@ -15,7 +15,7 @@ public class VoxelManagerExo2 : MonoBehaviour
         Debug.Log("Octree initialized.");
     }
 
-    // Ajouter du potentiel avec le rayon autour de la position
+    // Méthode pour ajouter du potentiel avec un rayon autour de la position
     public void AddPotentialAtPosition(Vector3 position, float sphereRadius, float amount)
     {
         Debug.Log($"Adding potential at position {position} with radius {sphereRadius}");
