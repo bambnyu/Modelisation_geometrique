@@ -3,27 +3,38 @@ using UnityEngine;
 public class SphereControllerExo2 : MonoBehaviour
 {
     public float moveSpeed = 5.0f; // Vitesse de déplacement de la sphère
-    public float potentialIncrement = 1.0f; // Incrément de potentiel par mise à jour
+    public float potentialIncrement = 1.0f; // Valeur du potentiel à ajouter ou soustraire
     public VoxelManagerExo2 voxelManager; // Référence vers le gestionnaire de voxels
-    public float sphereRadius = 1.5f; // Rayon de la sphère pour définir la zone de voxelisation
+    public float sphereRadius = 1.5f; // Rayon de la sphère pour le potentiel
+
+    private bool isSubtractionMode = false; // Indicateur de mode soustraction/ajout
 
     void Update()
     {
-        // Déplacer la sphère avec les touches de direction
-        float horizontal = Input.GetAxis("Horizontal"); // Axe X avec A/D
-        float vertical = Input.GetAxis("Vertical"); // Axe Z avec W/S
+        // Toggle entre ajout et soustraction du potentiel avec la touche Espace
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            isSubtractionMode = !isSubtractionMode;
+            //Debug.Log("Mode toggle: " + (isSubtractionMode ? "Soustraction" : "Ajout"));
+        }
 
-        // Utiliser Q et E pour le mouvement vertical (axe Y)
+        // Gestion des déplacements avec les touches directionnelles
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+
         float yMovement = 0;
-        if (Input.GetKey(KeyCode.Q)) yMovement = -1;
-        if (Input.GetKey(KeyCode.E)) yMovement = 1;
+        if (Input.GetKey(KeyCode.Q)) yMovement = -1; // Descente
+        if (Input.GetKey(KeyCode.E)) yMovement = 1; // Montée
 
-        // Calculer le déplacement et mettre à jour la position
+        // Calcul et application du mouvement en fonction de la vitesse
         Vector3 movement = new Vector3(horizontal, yMovement, vertical) * moveSpeed * Time.deltaTime;
         transform.position += movement;
 
-        // Ajouter du potentiel autour de la position de la sphère pour créer des voxels visibles
-        Debug.Log($"Adding potential at position: {transform.position}");
-        voxelManager.AddPotentialAtPosition(transform.position, sphereRadius, potentialIncrement);
+        // Calcul du changement de potentiel en fonction du mode actuel
+        float potentialChange = isSubtractionMode ? -potentialIncrement : potentialIncrement;
+        //Debug.Log((isSubtractionMode ? "Removing" : "Adding") + $" potential at position: {transform.position}");
+
+        // Modification du potentiel à la position actuelle de la sphère
+        voxelManager.ModifyPotentialAtPosition(transform.position, sphereRadius, potentialChange, isSubtractionMode);
     }
 }
