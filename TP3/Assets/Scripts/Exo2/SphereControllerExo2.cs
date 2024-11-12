@@ -5,6 +5,7 @@ public class SphereControllerExo2 : MonoBehaviour
     public float moveSpeed = 5.0f; // Vitesse de déplacement de la sphère
     public float potentialIncrement = 1.0f; // Incrément de potentiel par mise à jour
     public VoxelManagerExo2 voxelManager; // Référence vers le gestionnaire de voxels
+    public float sphereRadius = 1.5f; // Rayon de la sphère pour définir la zone de voxelisation
 
     void Update()
     {
@@ -20,8 +21,8 @@ public class SphereControllerExo2 : MonoBehaviour
         Vector3 movement = new Vector3(horizontal, yMovement, vertical) * moveSpeed * Time.deltaTime;
         transform.position += movement;
 
-        // Ajout de potentiel avec message de débogage
+        // Ajouter du potentiel autour de la position de la sphère pour créer un ensemble de voxels
         Debug.Log($"Adding potential at position: {transform.position}");
-        voxelManager.AddPotentialAtPosition(transform.position, potentialIncrement);
+        voxelManager.AddPotentialAtPosition(transform.position, sphereRadius, potentialIncrement);
     }
 }

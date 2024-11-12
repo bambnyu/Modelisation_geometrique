@@ -2,22 +2,23 @@ using UnityEngine;
 
 public class VoxelManagerExo2 : MonoBehaviour
 {
-    public float octreeSize = 50.0f; // Taille étendue pour couvrir plus de zone
+    public float octreeSize = 50.0f; // Taille de l'octree pour couvrir la zone
     public float visibilityThreshold = 1.0f; // Seuil pour rendre les voxels visibles
-    public int maxDepth = 5; // Profondeur maximale de subdivision de l'octree
+    public int maxDepth = 7; // Profondeur augmentée pour une plus grande résolution
 
     private OctreeExo2 octree;
 
     void Start()
     {
-        // Initialiser l'octree au centre ajusté pour couvrir la zone de mouvement de la sphère
+        // Initialiser l'octree avec le centre ajusté
         octree = new OctreeExo2(new Vector3(0, -2, -20), octreeSize, visibilityThreshold, maxDepth);
         Debug.Log("Octree initialized.");
     }
 
-    public void AddPotentialAtPosition(Vector3 position, float amount)
+    // Ajouter du potentiel avec le rayon autour de la position
+    public void AddPotentialAtPosition(Vector3 position, float sphereRadius, float amount)
     {
-        Debug.Log($"Calling AddPotential at position {position}");
-        octree.AddPotential(position, amount);
+        Debug.Log($"Adding potential at position {position} with radius {sphereRadius}");
+        octree.AddPotential(position, sphereRadius, amount);
     }
 }

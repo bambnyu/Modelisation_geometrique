@@ -16,6 +16,7 @@ public class OctreeExo2
             this.bounds = bounds;
         }
 
+        // Subdivise le nœud en 8 enfants
         public void Subdivide()
         {
             children = new Node[8];
@@ -46,28 +47,28 @@ public class OctreeExo2
         this.maxDepth = maxDepth;
     }
 
-    public void AddPotential(Vector3 position, float amount)
+    // Méthode modifiée pour inclure un rayon de voxelisation autour de la sphère
+    public void AddPotential(Vector3 sphereCenter, float sphereRadius, float amount)
     {
-        Debug.Log($"Adding potential in octree for position: {position}");
-        AddPotentialRecursive(root, position, amount, 0);
+        AddPotentialRecursive(root, sphereCenter, sphereRadius, amount, 0);
     }
 
-    private void AddPotentialRecursive(Node node, Vector3 position, float amount, int depth)
+    private void AddPotentialRecursive(Node node, Vector3 sphereCenter, float sphereRadius, float amount, int depth)
     {
-        if (!node.bounds.Contains(position))
-        {
-            Debug.Log("Position is outside node bounds.");
+        if (!node.bounds.Intersects(new Bounds(sphereCenter, Vector3.one * sphereRadius * 2)))
             return;
-        }
 
         if (depth >= maxDepth || node.bounds.size.x <= 1.0f)
         {
-            node.potential += amount;
-            Debug.Log($"Node potential: {node.potential}, Threshold: {visibilityThreshold}");
-            if (node.potential >= visibilityThreshold && !node.isVisible)
+            float distanceToCenter = Vector3.Distance(node.bounds.center, sphereCenter);
+            if (distanceToCenter <= sphereRadius)
             {
-                CreateVisibleVoxel(node.bounds);
-                node.isVisible = true;
+                node.potential += amount;
+                if (node.potential >= visibilityThreshold && !node.isVisible)
+                {
+                    CreateVisibleVoxel(node.bounds);
+                    node.isVisible = true;
+                }
             }
             return;
         }
@@ -79,13 +80,12 @@ public class OctreeExo2
 
         foreach (var child in node.children)
         {
-            AddPotentialRecursive(child, position, amount, depth + 1);
+            AddPotentialRecursive(child, sphereCenter, sphereRadius, amount, depth + 1);
         }
     }
 
     private void CreateVisibleVoxel(Bounds bounds)
     {
-        Debug.Log("Creating voxel at: " + bounds.center);
         GameObject voxel = GameObject.CreatePrimitive(PrimitiveType.Cube);
         voxel.transform.position = bounds.center;
         voxel.transform.localScale = bounds.size;
