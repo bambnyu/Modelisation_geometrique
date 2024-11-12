@@ -8,14 +8,13 @@ public class MeshSimplifier
     {
         Vector3 minBound = mesh.bounds.min;
         Vector3 maxBound = mesh.bounds.max;
-        Debug.Log($"Limites du maillage - Min : {minBound}, Max : {maxBound}, Taille de cellule : {cellSize}");
+        //Debug.Log($"Limites du maillage - Min : {minBound}, Max : {maxBound}, Taille de cellule : {cellSize}");
 
         // Dictionnaire pour stocker les sommets regroupés par cellules
         Dictionary<Vector3Int, List<Vector3>> grid = new Dictionary<Vector3Int, List<Vector3>>();
         List<Vector3> vertices = new List<Vector3>(mesh.vertices);
         List<int> triangles = new List<int>(mesh.triangles);
 
-        Debug.Log("Regroupement des sommets dans les cellules de la grille...");
 
         // Regroupement des sommets dans les cellules de la grille
         foreach (Vector3 vertex in vertices)
@@ -28,7 +27,7 @@ public class MeshSimplifier
             grid[cellIndex].Add(vertex);
         }
 
-        Debug.Log($"Cellules de la grille créées : {grid.Count}");
+        //Debug.Log($"Cellules de la grille créées : {grid.Count}");
 
         // Calcul des sommets représentatifs pour chaque cellule
         Dictionary<Vector3Int, Vector3> representativeVertices = new Dictionary<Vector3Int, Vector3>();
@@ -36,11 +35,11 @@ public class MeshSimplifier
         {
             Vector3 mergedPosition = AveragePosition(cell.Value);
             representativeVertices[cell.Key] = mergedPosition;
-            Debug.Log($"Cellule {cell.Key} contient {cell.Value.Count} sommets fusionnés en {mergedPosition}");
+            //Debug.Log($"Cellule {cell.Key} contient {cell.Value.Count} sommets fusionnés en {mergedPosition}");
         }
 
         List<int> newTriangles = new List<int>();
-        Debug.Log("Mise à jour des triangles avec les sommets représentatifs...");
+        //Debug.Log("Mise à jour des triangles avec les sommets représentatifs...");
 
         // Mise à jour des indices des triangles avec les sommets représentatifs
         foreach (var triIndex in triangles)
@@ -50,7 +49,7 @@ public class MeshSimplifier
             newTriangles.Add(AddOrGetVertex(representativeVertices[cellIndex]));
         }
 
-        Debug.Log($"Maillage simplifié final - Sommets : {vertexList.Count}, Triangles : {newTriangles.Count / 3}");
+        //Debug.Log($"Maillage simplifié final - Sommets : {vertexList.Count}, Triangles : {newTriangles.Count / 3}");
 
         // Création du nouveau mesh simplifié
         Mesh newMesh = new Mesh();

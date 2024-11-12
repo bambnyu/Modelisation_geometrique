@@ -7,8 +7,10 @@ using UnityEngine;
 public class OffParser : MonoBehaviour
 {
     // Chemin du fichier OFF à charger
+    [Header("Chemin du fichier OFF à charger")]
     public string filePath = "path a mettre";
-    // Facteur de pourcentage pour calculer la taille des cellules en fonction de la taille du mesh (plus il est petit, plus le maillage est détaillé)
+    // Facteur de pourcentage pour calculer la taille des cellules en fonction de la taille du mesh (plus il est petit, plus le maillage est détaillé) (entre 0.1 et 0.01) donne des resultats significatifs
+    [Header("facteur de taille des cellules (plus il est petit mieux c'est) (entre 0.1 et 0.01)")]
     public float cellSizeFactor = 0.05f;
 
     // Listes pour stocker les sommets et les triangles du maillage
@@ -17,27 +19,25 @@ public class OffParser : MonoBehaviour
 
     void Start()
     {
-        Debug.Log("Début du processus de chargement du fichier OFF...");
         // Chargement du fichier OFF
         LoadOFFFile(filePath);
 
         // Création du mesh à partir des données chargées
         Mesh mesh = CreateMesh();
-        Debug.Log($"Maillage original - Sommets : {mesh.vertexCount}, Triangles : {mesh.triangles.Length / 3}");
+        //Debug.Log($"Maillage original - Sommets : {mesh.vertexCount}, Triangles : {mesh.triangles.Length / 3}");
 
         // Calcul d'une taille dynamique de cellule en fonction des dimensions du maillage
         float cellSize = CalculateDynamicCellSize(mesh);
-        Debug.Log($"Taille de cellule calculée en fonction des dimensions : {cellSize}");
+        //Debug.Log($"Taille de cellule calculée en fonction des dimensions : {cellSize}");
 
         // Simplification du maillage après le chargement
         MeshSimplifier simplifier = new MeshSimplifier();
         mesh = simplifier.SimplifyMeshByGrid(mesh, cellSize);
 
-        Debug.Log($"Maillage simplifié - Sommets : {mesh.vertexCount}, Triangles : {mesh.triangles.Length / 3}");
+        //Debug.Log($"Maillage simplifié - Sommets : {mesh.vertexCount}, Triangles : {mesh.triangles.Length / 3}");
 
         // Application du maillage simplifié à l'objet
         ApplyMesh(mesh);
-        Debug.Log("Maillage appliqué avec succès.");
     }
 
     // Méthode pour charger le fichier OFF et extraire les données de sommets et de triangles
@@ -59,7 +59,7 @@ public class OffParser : MonoBehaviour
                 string[] info = sr.ReadLine().Split();
                 int numVertices = int.Parse(info[0]);
                 int numFaces = int.Parse(info[1]);
-                Debug.Log($"Nombre de sommets : {numVertices}, Nombre de faces : {numFaces}");
+                //Debug.Log($"Nombre de sommets : {numVertices}, Nombre de faces : {numFaces}");
 
                 // Lecture des sommets
                 for (int i = 0; i < numVertices; i++)
@@ -70,7 +70,7 @@ public class OffParser : MonoBehaviour
                     float z = float.Parse(vertexInfo[2], CultureInfo.InvariantCulture);
                     vertices.Add(new Vector3(x, y, z));
                 }
-                Debug.Log($"Chargement de {vertices.Count} sommets.");
+                //Debug.Log($"Chargement de {vertices.Count} sommets.");
 
                 // Lecture des faces
                 for (int i = 0; i < numFaces; i++)
@@ -86,12 +86,12 @@ public class OffParser : MonoBehaviour
                         triangles.Add(int.Parse(faceInfo[3]));
                     }
                 }
-                Debug.Log($"Chargement de {triangles.Count / 3} triangles.");
+                //Debug.Log($"Chargement de {triangles.Count / 3} triangles.");
             }
         }
         catch (Exception e)
         {
-            Debug.LogError($"Erreur lors de la lecture du fichier OFF : {e.Message}");
+            Debug.LogError($"Erreur lors de la lecture du fichier OFF : {e.Message}"); // j'avais des soucis de lecture donc petite sécurité mais sert pas à grand chose maintenant
         }
     }
 

@@ -338,7 +338,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   filePath: Assets/Models/buddha.off
-  cellSizeFactor: 0.1
+  cellSizeFactor: 0.01
 --- !u!4 &1586715309
 Transform:
   m_ObjectHideFlags: 0
