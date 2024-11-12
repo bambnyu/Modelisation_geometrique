@@ -35,5 +35,5 @@ Pour lancer le projet :
 3. Sélectionnez la scène correspondant à l'exercice que vous souhaitez exécuter (`Exo1.unity` ou `Exo2.unity`).
 
 ## Utilisation
-- Dans `Exo1`, lancez et dans la scène tournez autour des différentes sphères vous pouvez choisir le nombre qui apparait et leur taille pour la resolution c'est mieux de la cahnger dans le code precisement
+- Dans `Exo1`, lancez et dans la scène tournez autour des différentes sphères vous pouvez choisir le nombre qui apparait et leur taille pour la resolution 
 - Dans `Exo2`, utilisez les touches directionnelles pour contrôler la sphère et interagir avec les voxels. zqsd et a/e pour l'axe y, de plus appuyez sur espace pour passer de ajouter de la matièere à supprimer de la matière
