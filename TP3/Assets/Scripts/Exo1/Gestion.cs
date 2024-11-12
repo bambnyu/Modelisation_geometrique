@@ -4,6 +4,7 @@ using UnityEngine;
 public class Gestion : MonoBehaviour
 {
     public int numSpheres = 5; // Nombre de sphères à générer
+    [Header("octreeSize a faire varier entre5 et 10 pour la résolution")]
     public float octreeSize = 10.0f; // Taille de l'octree a faire varier entre 5 et 10 pour la résolution
     public int maxDepth = 20; // Profondeur maximale pour la résolution de l'octree
     public float sphereRadius = 5.0f; // Rayon de chaque sphère
