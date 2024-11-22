@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 public class Exercice3 : MonoBehaviour
 {
-    [Header("Points de contrôle (Utilisez des sphères)")]
+    [Header("Points de contrôle")]
     public List<Transform> controlPoints; // Liste des Transforms pour les points de contrôle
 
     [Header("Résolution de la courbe")]
     public int resolution = 50;
 
-    private int selectedPoint = -1; // Aucun point sélectionné par défaut
+    
 
     void OnDrawGizmos()
     {
@@ -42,12 +42,6 @@ public class Exercice3 : MonoBehaviour
             previousPoint = currentPoint;
         }
 
-        // Mettre en évidence le point de contrôle sélectionné
-        if (selectedPoint >= 0 && selectedPoint < controlPoints.Count && controlPoints[selectedPoint] != null)
-        {
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawSphere(controlPoints[selectedPoint].position, 0.15f);
-        }
     }
 
     // Algorithme récursif de De Casteljau
@@ -63,7 +57,6 @@ public class Exercice3 : MonoBehaviour
             {
                 Vector3 interpolated = Vector3.Lerp(points[i].position, points[i + 1].position, t);
 
-                // Créer un objet temporaire pour stocker la position interpolée
                 GameObject temp = new GameObject("TempPoint");
                 temp.transform.position = interpolated;
                 nextPoints.Add(temp.transform);
@@ -81,7 +74,6 @@ public class Exercice3 : MonoBehaviour
         return result;
     }
 
-    // Méthode pour calculer un point sur la courbe avec De Casteljau
     private Vector3 CalculateBezierPoint(float t)
     {
         return DeCasteljau(controlPoints, t);

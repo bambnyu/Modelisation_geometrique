@@ -41,7 +41,7 @@ public class Exercice1 : MonoBehaviour
     private Vector3 CalculateHermitePoint(float t)
     {
         Vector3 P0 = point0.position;
-        Vector3 V0 = tangent0.position - P0; // La tangente est calculée comme une direction
+        Vector3 V0 = tangent0.position - P0;
         Vector3 P1 = point1.position;
         Vector3 V1 = tangent1.position - P1;
 

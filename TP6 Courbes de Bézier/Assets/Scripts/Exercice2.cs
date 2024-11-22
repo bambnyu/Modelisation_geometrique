@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Exercice2 : MonoBehaviour
 {
-    [Header("Points de contrôle (Utilisez des sphères)")]
+    [Header("Points de contrôle")]
     public Transform point0; // Sphère pour P0
     public Transform point1; // Sphère pour P1
     public Transform point2; // Sphère pour P2
@@ -11,7 +11,6 @@ public class Exercice2 : MonoBehaviour
     [Header("Résolution de la courbe")]
     public int resolution = 50;
 
-    private int selectedPoint = -1; // Aucun point sélectionné par défaut
 
     void OnDrawGizmos()
     {
@@ -32,22 +31,7 @@ public class Exercice2 : MonoBehaviour
         Gizmos.color = Color.green;
         Gizmos.DrawLine(point0.position, point1.position);
         Gizmos.DrawLine(point1.position, point2.position);
-        Gizmos.DrawLine(point2.position, point3.position);
-
-        // Mettre en évidence le point de contrôle sélectionné
-        if (selectedPoint >= 0)
-        {
-            Gizmos.color = Color.cyan;
-            Transform selected = selectedPoint switch
-            {
-                0 => point0,
-                1 => point1,
-                2 => point2,
-                3 => point3,
-                _ => point0,
-            };
-            Gizmos.DrawSphere(selected.position, 0.15f);
-        }
+        Gizmos.DrawLine(point2.position, point3.position);       
     }
 
     // Équation de la courbe de Bézier utilisant les polynômes de Bernstein
